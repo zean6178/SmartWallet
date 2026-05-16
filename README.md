@@ -19,23 +19,49 @@ Bot Telegram untuk tracking transaksi buy/sell/swap dari sebuah wallet di Solana
 
 ## 🚀 Setup
 
-### 1. Clone & Install
+### 1. Clone Repository
 
 ```bash
 git clone https://github.com/zean6178/SmartWallet.git
 cd SmartWallet
+```
+
+### 2. Buat Virtual Environment (Recommended)
+
+```bash
+python -m venv venv
+```
+
+Aktifkan virtual environment:
+
+- **Linux/macOS:**
+  ```bash
+  source venv/bin/activate
+  ```
+- **Windows (CMD):**
+  ```cmd
+  venv\Scripts\activate.bat
+  ```
+- **Windows (PowerShell):**
+  ```powershell
+  venv\Scripts\Activate.ps1
+  ```
+
+### 3. Install Dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-### 2. Konfigurasi
+### 4. Konfigurasi
 
-Copy file `.env.example` ke `.env` dan isi dengan data kamu:
+Copy file `.env.example` ke `.env`:
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env`:
+Buka file `.env` lalu isi dengan data kamu:
 
 ```env
 SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
@@ -47,11 +73,56 @@ TELEGRAM_CHAT_ID=chat_id_kamu
 POLL_INTERVAL=10
 ```
 
-### 3. Jalankan Bot
+> 💡 **Tips:** Lihat bagian [Cara Dapat API Keys](#-cara-dapat-api-keys) di bawah untuk panduan lengkap.
+
+### 5. Jalankan Bot
 
 ```bash
 python main.py
 ```
+
+### 6. Jalankan di Background (Opsional)
+
+Kalau mau bot jalan terus di server/VPS:
+
+- **Menggunakan `nohup`:**
+  ```bash
+  nohup python main.py > bot.log 2>&1 &
+  ```
+
+- **Menggunakan `screen`:**
+  ```bash
+  screen -S smartwallet
+  python main.py
+  # Tekan Ctrl+A lalu D untuk detach
+  # Untuk kembali: screen -r smartwallet
+  ```
+
+- **Menggunakan `systemd` (Linux):**
+
+  Buat file `/etc/systemd/system/smartwallet.service`:
+  ```ini
+  [Unit]
+  Description=Smart Wallet Tracker
+  After=network.target
+
+  [Service]
+  Type=simple
+  User=your_username
+  WorkingDirectory=/path/to/SmartWallet
+  ExecStart=/path/to/SmartWallet/venv/bin/python main.py
+  Restart=always
+  RestartSec=10
+
+  [Install]
+  WantedBy=multi-user.target
+  ```
+
+  Lalu jalankan:
+  ```bash
+  sudo systemctl enable smartwallet
+  sudo systemctl start smartwallet
+  ```
 
 ## 📱 Contoh Notifikasi Telegram
 
